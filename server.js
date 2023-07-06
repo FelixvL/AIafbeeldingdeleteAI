@@ -23,7 +23,20 @@ app.get('/images', (req, res) => {
         res.json(images);
     });
 });
+app.post('/move/:name', (req, res) => {
+    const oldPath = path.join('./public/images/', req.params.name);
+    const newPath = path.join('./public/images/moved/', req.params.name);  // Adjust as necessary
 
+    fs.rename(oldPath, newPath, (err) => {
+        if (err) {
+            console.error("Could not move file.", err);
+            res.status(500).send({ error: 'Could not move file.' });
+            return;
+        }
+
+        res.status(200).send({ message: 'File moved.' });
+    });
+});
 app.delete('/images/:name', (req, res) => {
     const filePath = path.join('./public/images/', req.params.name);
 
